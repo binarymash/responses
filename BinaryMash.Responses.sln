@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE2D43DE-BAF0-45DE-B632-2AF9D976E83D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50AF0FD4-3424-49E8-92E2-B5F5A3F6E7B7}"
+	ProjectSection(SolutionItems) = preProject
+		build.cake = build.cake
+		build.ps1 = build.ps1
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BinaryMash.Responses", "src\BinaryMash.Responses\BinaryMash.Responses.xproj", "{5D99D067-F96B-453E-A010-652F788BAB42}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BinaryMash.Responses.Tests", "src\BinaryMash.Responses.Tests\BinaryMash.Responses.Tests.xproj", "{68E0BA94-65E2-4BC1-8489-8B0177503216}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D99D067-F96B-453E-A010-652F788BAB42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D99D067-F96B-453E-A010-652F788BAB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D99D067-F96B-453E-A010-652F788BAB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D99D067-F96B-453E-A010-652F788BAB42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68E0BA94-65E2-4BC1-8489-8B0177503216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E0BA94-65E2-4BC1-8489-8B0177503216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E0BA94-65E2-4BC1-8489-8B0177503216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E0BA94-65E2-4BC1-8489-8B0177503216}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5D99D067-F96B-453E-A010-652F788BAB42} = {DE2D43DE-BAF0-45DE-B632-2AF9D976E83D}
+		{68E0BA94-65E2-4BC1-8489-8B0177503216} = {DE2D43DE-BAF0-45DE-B632-2AF9D976E83D}
+	EndGlobalSection
+EndGlobal
