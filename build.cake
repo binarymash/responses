@@ -1,17 +1,18 @@
+#tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=OpenCover"
 #tool "nuget:?package=ReportGenerator"
-#tool "nuget:?package=GitVersion.CommandLine"
 
 var compileConfig = Argument("configuration", "Debug");
 var target = Argument("target", "Default");
 var artifactsDir = Directory("Artifacts");
+var projectJson = "./src/BinaryMash.Responses/project.json";
 
 // version
-var semVer = "0.0.0";
+var _nugetVersion = "0.0.0";
 
 // unit testing
 var artifactsForUnitTestsDir = artifactsDir + Directory("UnitTests");
-var unitTestAssemblies = @".\src\BinaryMash.Responses.Tests";
+var unitTestAssemblies = @"./src/BinaryMash.Responses.Tests";
 var openCoverSettings = new OpenCoverSettings();
 var minCodeCoverage = 95d;
 
@@ -24,28 +25,33 @@ Task("Default")
 Task("Clean")
 	.Does(() =>
 	{
-		EnsureDirectoryExists(artifactsDir);
-		CleanDirectories(artifactsDir);
+        if (DirectoryExists(artifactsDir))
+        {
+            DeleteDirectory(artifactsDir, recursive:true);
+        }
+        CreateDirectory(artifactsDir);
 	});
 	
-Task("GetVersion")
+Task("Version")
 	.Does(() =>
 	{
+		_nugetVersion = GetVersion();
+		Information("SemVer version number: " + _nugetVersion);
+
 		if (AppVeyor.IsRunningOnAppVeyor)
 		{
-			Information("Skipping GitVersion");
+			Information("Persisting version number...");
+			PersistVersion(_nugetVersion);
 		}
 		else
 		{
-			var gitVersion = GitVersion();
-			semVer = gitVersion.SemVer;
-			Information("SemVer according to GitVersion: " + semVer);
+			Information("We are not running on build server, so we won't persist the version number.");
 		}
 	});
 
 Task("Compile")
 	.IsDependentOn("Clean")
-//	.IsDependentOn("GetVersion")
+	.IsDependentOn("Version")
 	.Does(() =>
 	{
 		Information("Build configuration is " + compileConfig);
@@ -53,7 +59,7 @@ Task("Compile")
 		var buildSettings = new DotNetCoreBuildSettings
 		{
 			Configuration = compileConfig,
-			VersionSuffix = semVer
+			VersionSuffix = _nugetVersion
 		};
 		
 		DotNetCoreRestore();
@@ -108,3 +114,22 @@ Task("RunUnitTestsCoverageReport")
 	});
 
 RunTarget(target);
+
+private string GetVersion()
+{
+        GitVersion(new GitVersionSettings{
+            UpdateAssemblyInfo = false,
+            OutputType = GitVersionOutput.BuildServer
+        });
+
+        var versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+		return versionInfo.NuGetVersion;
+}
+
+private void PersistVersion(string version)
+{
+	var updatedProjectJson = System.IO.File.ReadAllText(projectJson)
+		.Replace("0.0.0-dev", _nugetVersion);
+
+	System.IO.File.WriteAllText(projectJson, updatedProjectJson);
+}
