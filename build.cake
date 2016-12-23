@@ -4,11 +4,12 @@
 
 var compileConfig = Argument("configuration", "Debug");
 var target = Argument("target", "Default");
-var artifactsDir = Directory("Artifacts");
+var artifactsDir = Directory("artifacts");
 var projectJson = "./src/BinaryMash.Responses/project.json";
 
-// version
-var _nugetVersion = "0.0.0";
+// versioning
+var committedVersion = "0.0.0-dev";
+var buildVersion = committedVersion;
 
 // unit testing
 var artifactsForUnitTestsDir = artifactsDir + Directory("UnitTests");
@@ -16,8 +17,12 @@ var unitTestAssemblies = @"./src/BinaryMash.Responses.Tests";
 var openCoverSettings = new OpenCoverSettings();
 var minCodeCoverage = 95d;
 
+//packaging
+var packagesDir = artifactsDir + Directory("Packages");
+
 Task("Default")
 	.IsDependentOn("RunUnitTestsCoverageReport")
+	.IsDependentOn("Package")
 	.Does(() =>
 	{
 	});
@@ -35,13 +40,14 @@ Task("Clean")
 Task("Version")
 	.Does(() =>
 	{
-		_nugetVersion = GetVersion();
-		Information("SemVer version number: " + _nugetVersion);
+		var nugetVersion = GetVersion();
+		Information("SemVer version number: " + nugetVersion);
 
 		if (AppVeyor.IsRunningOnAppVeyor)
 		{
 			Information("Persisting version number...");
-			PersistVersion(_nugetVersion);
+			PersistVersion(nugetVersion);
+			buildVersion = nugetVersion;
 		}
 		else
 		{
@@ -49,7 +55,7 @@ Task("Version")
 		}
 	});
 
-Task("Compile")
+Task("Restore")
 	.IsDependentOn("Clean")
 	.IsDependentOn("Version")
 	.Does(() =>
@@ -59,15 +65,13 @@ Task("Compile")
 		var buildSettings = new DotNetCoreBuildSettings
 		{
 			Configuration = compileConfig,
-			VersionSuffix = _nugetVersion
 		};
 		
-		DotNetCoreRestore();
-		DotNetCoreBuild(@"src\BinaryMash.Responses", buildSettings);
+		DotNetCoreRestore("./src");
 	});
 
 Task("RunUnitTests")
-	.IsDependentOn("Compile")
+	.IsDependentOn("Restore")
 	.Does(() =>
 	{
 		DotNetCoreTest(unitTestAssemblies);
@@ -113,23 +117,46 @@ Task("RunUnitTestsCoverageReport")
 		};
 	});
 
+Task("Package")
+	.Does(() => 
+	{
+		var settings = new DotNetCorePackSettings
+			{
+				OutputDirectory = packagesDir,
+				NoBuild = true
+			};
+
+		var projectName = "BinaryMash.Responses";
+
+		DotNetCorePack(projectJson, settings);
+
+		System.IO.File.WriteAllLines(
+			packagesDir + File("artifacts"), 
+			new[]
+			{
+				"nuget:" + projectName + "." + buildVersion + ".nupkg",
+				"nugetSymbols:" + projectName + "." + buildVersion + ".symbols.nupkg"
+			}
+		);
+	});
+
 RunTarget(target);
 
 private string GetVersion()
 {
-        GitVersion(new GitVersionSettings{
-            UpdateAssemblyInfo = false,
-            OutputType = GitVersionOutput.BuildServer
-        });
+    GitVersion(new GitVersionSettings{
+        UpdateAssemblyInfo = false,
+        OutputType = GitVersionOutput.BuildServer
+    });
 
-        var versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
-		return versionInfo.NuGetVersion;
+    var versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+	return versionInfo.NuGetVersion;
 }
 
 private void PersistVersion(string version)
 {
 	var updatedProjectJson = System.IO.File.ReadAllText(projectJson)
-		.Replace("0.0.0-dev", _nugetVersion);
+		.Replace(committedVersion, version);
 
 	System.IO.File.WriteAllText(projectJson, updatedProjectJson);
 }
