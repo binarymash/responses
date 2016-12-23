@@ -138,6 +138,15 @@ Task("Package")
 				"nugetSymbols:" + projectName + "." + buildVersion + ".symbols.nupkg"
 			}
 		);
+
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+			Information("Uploading package artifacts to AppVeyor");
+            foreach (var file in GetFiles(packagesDir))
+			{
+                AppVeyor.UploadArtifact(file.FullPath);
+			}
+        }
 	});
 
 RunTarget(target);
