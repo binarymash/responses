@@ -46,8 +46,9 @@ Task("Version")
 		if (AppVeyor.IsRunningOnAppVeyor)
 		{
 			Information("Persisting version number...");
-			PersistVersion(nugetVersion);
 			buildVersion = nugetVersion;
+			PersistVersion(buildVersion);
+			BuildSystem.AppVeyor.UpdateBuildVersion(buildVersion);
 		}
 		else
 		{
