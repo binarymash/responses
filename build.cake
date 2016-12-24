@@ -164,8 +164,18 @@ private string GetVersion()
 
 private void PersistVersion(string version)
 {
-	var updatedProjectJson = System.IO.File.ReadAllText(projectJson)
-		.Replace(committedVersion, version);
+	Information(string.Format("We'll search all project.json files for {0} and replace with {1}...", committedVersion, version));
+	var projectJsonFiles = GetFiles("./**/project.json");
 
-	System.IO.File.WriteAllText(projectJson, updatedProjectJson);
+	foreach(var projectJsonFile in projectJsonFiles)
+	{
+		var file = projectJsonFile.ToString();
+ 
+		Information(string.Format("Updating {0}...", file));
+
+		var updatedProjectJson = System.IO.File.ReadAllText(file)
+			.Replace(committedVersion, version);
+
+		System.IO.File.WriteAllText(file, updatedProjectJson);
+	}
 }
