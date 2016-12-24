@@ -105,6 +105,8 @@ Task("RunUnitTestsCoverageReport")
 		);
 		
 		ReportGenerator(coverageSummaryFile, artifactsForUnitTestsDir);
+
+		StoreArtifacts(artifactsForUnitTestsDir);
 		
 		var sequenceCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@sequenceCoverage");
 		var branchCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@branchCoverage");
@@ -139,14 +141,7 @@ Task("Package")
 			}
 		);
 
-        if (AppVeyor.IsRunningOnAppVeyor)
-        {
-			Information("Uploading package artifacts to AppVeyor");
-            foreach (var file in GetFiles(packagesDir))
-			{
-                AppVeyor.UploadArtifact(file.FullPath);
-			}
-        }
+		StoreArtifacts(packagesDir);
 	});
 
 RunTarget(target);
@@ -177,5 +172,25 @@ private void PersistVersion(string version)
 			.Replace(committedVersion, version);
 
 		System.IO.File.WriteAllText(file, updatedProjectJson);
+	}
+}
+
+private void StoreArtifacts(ConvertableDirectoryPath directory)
+{
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+			Information("Uploading package artifacts to AppVeyor");
+
+			var path = directory.ToString() + @"/**/*";
+
+            foreach (var file in GetFiles(path))
+			{
+				Information("Uploading " + file.ToString());
+                AppVeyor.UploadArtifact(file.FullPath);
+			}
+        }
+	else 
+	{
+		Information("We're not running on AppVeyor, so wont store artifacts.");
 	}
 }
