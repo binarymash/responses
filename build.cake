@@ -1,11 +1,10 @@
 ﻿#tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=OpenCover"
 #tool "nuget:?package=ReportGenerator"
+#tool "nuget:?package=GitReleaseNotes"
 
-var compileConfig = Argument("configuration", "Debug");
 var target = Argument("target", "Default");
 var artifactsDir = Directory("artifacts");
-var projectJson = "./src/BinaryMash.Responses/project.json";
 
 // versioning
 var committedVersion = "0.0.0-dev";
@@ -14,11 +13,17 @@ var buildVersion = committedVersion;
 // unit testing
 var artifactsForUnitTestsDir = artifactsDir + Directory("UnitTests");
 var unitTestAssemblies = @"./src/BinaryMash.Responses.Tests";
+var compileConfig = Argument("configuration", "Debug");
 var openCoverSettings = new OpenCoverSettings();
 var minCodeCoverage = 95d;
 
-//packaging
+// packaging
 var packagesDir = artifactsDir + Directory("Packages");
+var projectJson = "./src/BinaryMash.Responses/project.json";
+
+// release notes
+var releaseNotesDir = artifactsDir + Directory("Release");
+var releaseNotesFile = releaseNotesDir + File("releasenotes.md");
 
 Task("Default")
 	.IsDependentOn("RunUnitTestsCoverageReport")
@@ -120,6 +125,8 @@ Task("RunUnitTestsCoverageReport")
 Task("Package")
 	.Does(() => 
 	{
+        GenerateReleaseNotes();
+
 		var settings = new DotNetCorePackSettings
 			{
 				OutputDirectory = packagesDir,
@@ -170,5 +177,26 @@ private void PersistVersion(string version)
 			.Replace(committedVersion, version);
 
 		System.IO.File.WriteAllText(file, updatedProjectJson);
+	}
+}
+
+private void GenerateReleaseNotes()
+{
+	Information("Generating release notes at " + releaseNotesFile);
+
+	EnsureDirectoryExists(releaseNotesDir);
+
+    var releaseNotesExitCode = StartProcess(
+        @"tools/GitReleaseNotes/tools/gitreleasenotes.exe", 
+        new ProcessSettings { Arguments = ". /o " + releaseNotesFile });
+
+    if (string.IsNullOrEmpty(System.IO.File.ReadAllText(releaseNotesFile)))
+	{
+        System.IO.File.WriteAllText(releaseNotesFile, "No issues closed since last release");
+	}
+
+    if (releaseNotesExitCode != 0) 
+	{
+		throw new Exception("Failed to generate release notes");
 	}
 }
