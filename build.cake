@@ -1,4 +1,4 @@
-#tool "nuget:?package=GitVersion.CommandLine"
+﻿#tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=OpenCover"
 #tool "nuget:?package=ReportGenerator"
 
@@ -126,22 +126,12 @@ Task("Package")
 				NoBuild = true
 			};
 
-		var projectName = "BinaryMash.Responses";
-
 		DotNetCorePack(projectJson, settings);
-
-		System.IO.File.WriteAllLines(
-			packagesDir + File("artifacts"), 
-			new[]
-			{
-				"nuget:" + projectName + "." + buildVersion + ".nupkg",
-				"nugetSymbols:" + projectName + "." + buildVersion + ".symbols.nupkg"
-			}
-		);
 
 		if (AppVeyor.IsRunningOnAppVeyor)
 		{
-			var uploadSettings = new AppVeyorUploadArtifactsSettings().SetArtifactType(AppVeyorUploadArtifactType.NuGetPackage);
+			var uploadSettings = new AppVeyorUploadArtifactsSettings()
+				.SetArtifactType(AppVeyorUploadArtifactType.NuGetPackage);
 
 			var path = packagesDir.ToString() + @"/**/*";
 
