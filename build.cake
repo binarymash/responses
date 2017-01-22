@@ -144,14 +144,11 @@ Task("Package")
 
 		if (AppVeyor.IsRunningOnAppVeyor)
 		{
-			var uploadSettings = new AppVeyorUploadArtifactsSettings()
-				.SetArtifactType(AppVeyorUploadArtifactType.NuGetPackage);
-
 			var path = packagesDir.ToString() + @"/**/*";
 
 			foreach (var file in GetFiles(path))
 			{
-				AppVeyor.UploadArtifact(file.FullPath, uploadSettings);
+				AppVeyor.UploadArtifact(file.FullPath);
 			}
 		}
 	});
