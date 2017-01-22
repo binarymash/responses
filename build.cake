@@ -22,8 +22,7 @@ var packagesDir = artifactsDir + Directory("Packages");
 var projectJson = "./src/BinaryMash.Responses/project.json";
 
 // release notes
-var releaseNotesDir = artifactsDir + Directory("Release");
-var releaseNotesFile = releaseNotesDir + File("releasenotes.md");
+var releaseNotesFile = packagesDir + File("releasenotes.md");
 
 Task("Default")
 	.IsDependentOn("RunUnitTestsCoverageReport")
@@ -125,7 +124,9 @@ Task("RunUnitTestsCoverageReport")
 Task("Package")
 	.Does(() => 
 	{
-        GenerateReleaseNotes();
+		EnsureDirectoryExists(packagesDir);
+        
+		GenerateReleaseNotes();
 
 		var settings = new DotNetCorePackSettings
 			{
@@ -135,16 +136,19 @@ Task("Package")
 
 		DotNetCorePack(projectJson, settings);
 
+        System.IO.File.WriteAllLines(packagesDir + File("artifacts"), new[]{
+            "nuget:BinaryMash.Responses." + buildVersion + ".nupkg",
+            "nugetSymbols:BinaryMash.Responses." + buildVersion + ".symbols.nupkg",
+            "releaseNotes:releasenotes.md"
+        });
+
 		if (AppVeyor.IsRunningOnAppVeyor)
 		{
-			var uploadSettings = new AppVeyorUploadArtifactsSettings()
-				.SetArtifactType(AppVeyorUploadArtifactType.NuGetPackage);
-
 			var path = packagesDir.ToString() + @"/**/*";
 
 			foreach (var file in GetFiles(path))
 			{
-				AppVeyor.UploadArtifact(file.FullPath, uploadSettings);
+				AppVeyor.UploadArtifact(file.FullPath);
 			}
 		}
 	});
@@ -183,8 +187,6 @@ private void PersistVersion(string version)
 private void GenerateReleaseNotes()
 {
 	Information("Generating release notes at " + releaseNotesFile);
-
-	EnsureDirectoryExists(releaseNotesDir);
 
     var releaseNotesExitCode = StartProcess(
         @"tools/GitReleaseNotes/tools/gitreleasenotes.exe", 
