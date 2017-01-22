@@ -9,7 +9,7 @@
     "NETStandard.Library": "1.6.1",
     "Shouldly": "2.8.2",
     "TestStack.BDDfy": "4.3.2",
-    "xunit": "2.2.0-beta4-build3444"
+    "xunit": "2.2.0-beta5-build3474"
   },
 
   "frameworks": {
