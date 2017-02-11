@@ -1,29 +1,23 @@
 ﻿namespace BinaryMash.Responses
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     public class Response
     {
-        private readonly List<Error> _errors = new List<Error>();
-
-        public IEnumerable<Error> Errors => _errors;
-
-        protected void AddErrors(IEnumerable<Error> errors)
+        internal Response(IList<Error> errors)
         {
-            if (errors == null)
-            {
-                return;
-            }
-
-            _errors.AddRange(errors);
+            Errors = new ReadOnlyCollection<Error>(errors);
         }
+
+        public IReadOnlyCollection<Error> Errors { get; private set; }
     }
 
     public class Response<T> : Response
     {
         public T Payload { get; private set; }
 
-        public Response(T payload)
+        internal Response(T payload, IList<Error> errors) : base(errors)
         {
             Payload = payload;
         }
