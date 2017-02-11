@@ -2,12 +2,12 @@
   "version": "0.0.0-dev",
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.1"
   },
 
   "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
+    "netstandard1.1": {
+      "dependencies": {}
     }
   }
 }
