@@ -34,7 +34,7 @@
         public void DefaultPayloadWithErrors()
         {
             this.Given(_ => GivenWeWantAResponseWithADefaultPayload())
-                .And(_ => GivenWeAddSomeErrors())
+                .And(_ => GivenWeAddAnError())
                 .When(_ => WhenWeCreateTheResponse())
                 .Then(_ => TheResponsePayloadHasTheDefaultValue())
                 .And(_ => ThenTheResponseContainsAllErrors())
@@ -66,8 +66,11 @@
         public void PayloadWithErrors()
         {
             this.Given(_ => GivenWeWantAResponseWithAPayload())
-                .And(_ => GivenWeAddSomeErrors())
+                .And(_ => GivenWeAddAnError())
                 .And(_ => GivenWeAddMoreErrors())
+                .And(_ => GivenWeAddNullErrors())
+                .And(_ => GivenWeAddANullError())
+                .And(_ => GivenWeAddEmptyErrors())
                 .When(_ => WhenWeCreateTheResponse())
                 .Then(_ => ThenTheResponseContainsTheExpectedPayload())
                 .And(_ => ThenTheResponseContainsAllErrors())
@@ -91,9 +94,14 @@
             buildResponse = BuildResponse.WithPayload<SomeTestClass>(expectedPayload);
         }
 
+        private void GivenWeAddANullError()
+        {
+            buildResponse.AndWithErrors((Error)null);
+        }
+
         private void GivenWeAddNullErrors()
         {
-            buildResponse.AndWithErrors(null);
+            buildResponse.AndWithErrors((IEnumerable<Error>)null);
         }
 
         private void GivenWeAddEmptyErrors()
@@ -101,16 +109,12 @@
             buildResponse.AndWithErrors(new List<Error>());
         }
 
-        private void GivenWeAddSomeErrors()
+        private void GivenWeAddAnError()
         {
-            var errors = new List<Error>
-            {
-                new Error("1", "A"),
-                new Error("2", "B")
-            };
+            var error = new Error("1", "A");
 
-            expectedErrors.AddRange(errors);
-            buildResponse.AndWithErrors(errors);
+            expectedErrors.Add(error);
+            buildResponse.AndWithErrors(error);
         }
 
         private void GivenWeAddMoreErrors()
@@ -157,25 +161,6 @@
 
         public class SomeTestClass
         {
-
-        }
-
-        public Response ResponseBuilderSpecys()
-        {
-            return BuildResponse
-                .WithNoPayload()
-                .AndWithErrors(null)
-                .Create();
-
-            var response2 = BuildResponse
-                .WithPayload("ghjghj")
-                .AndWithErrors(null)
-                .AndWithErrors(null)
-                .Create();
-
-            var response3 = BuildResponse
-                .WithDefaultPayloadOfType<object>()
-                .Create();
 
         }
     }

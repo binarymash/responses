@@ -11,8 +11,12 @@
 
         private List<Error> expectedErrors;
 
-        private Response _response;
+        private Response response;
 
+        public BuildResponseSpecs()
+        {
+            expectedErrors = new List<Error>();
+        }
         [Fact]
         public void NoErrors()
         {
@@ -26,6 +30,7 @@
         public void AddNullErrors()
         {
             this.Given(_ => GivenWeWantAResponseWithNoPayload())
+                .And(_ => GivenWeAddANullError())
                 .And(_ => GivenWeAddNullErrors())
                 .When(_ => WhenWeCreateTheResponse())
                 .Then(_ => ThenTheResponseContainsNoErrors())
@@ -42,14 +47,30 @@
                 .BDDfy();
         }
 
+        [Fact]
+        public void AddErrors()
+        {
+            this.Given(_ => GivenWeWantAResponseWithNoPayload())
+                .And(_ => GivenWeAddAnError())
+                .And(_ => GivenWeAddMoreErrors())
+                .When(_ => WhenWeCreateTheResponse())
+                .Then(_ => ThenTheResponseContainsAllErrors())
+                .BDDfy();
+        }
+
         private void GivenWeWantAResponseWithNoPayload()
         {
             buildResponse = BuildResponse.WithNoPayload();
         }
 
+        private void GivenWeAddANullError()
+        {
+            buildResponse.AndWithErrors((Error)null);
+        }
+
         private void GivenWeAddNullErrors()
         {
-            buildResponse.AndWithErrors(null);
+            buildResponse.AndWithErrors((IEnumerable<Error>)null);
         }
 
         private void GivenWeAddEmptyErrors()
@@ -57,16 +78,12 @@
             buildResponse.AndWithErrors(new List<Error>());
         }
 
-        private void GivenWeAddSomeErrors()
+        private void GivenWeAddAnError()
         {
-            var errors = new List<Error>
-            {
-                new Error("1", "A"),
-                new Error("2", "B")
-            };
+            var error = new Error("1", "A");
 
-            expectedErrors.AddRange(errors);
-            buildResponse.AndWithErrors(errors);
+            expectedErrors.Add(error);
+            buildResponse.AndWithErrors(error);
         }
 
         private void GivenWeAddMoreErrors()
@@ -83,18 +100,22 @@
 
         private void WhenWeCreateTheResponse()
         {
-            _response = buildResponse.Create();
+            response = buildResponse.Create();
         }
 
         private void ThenTheResponseContainsNoErrors()
         {
-            _response.Errors.Count.ShouldBe(0);
+            response.Errors.Count.ShouldBe(0);
         }
 
         private void ThenTheResponseContainsAllErrors()
         {
-            _response.Errors.Count.ShouldBe(expectedErrors.Count);
-            _response.Errors.ShouldBeOneOf(expectedErrors);
+            response.Errors.Count.ShouldBe(expectedErrors.Count);
+
+            foreach (var expectedError in expectedErrors)
+            {
+                response.Errors.ShouldContain(e => e.Code == expectedError.Code && e.Message == expectedError.Message);
+            }
         }
     }
 }

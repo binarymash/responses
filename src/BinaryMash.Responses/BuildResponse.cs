@@ -10,6 +10,16 @@ namespace BinaryMash.Responses
 
         public static BuildResponse<T> WithPayload<T>(T payload) => new BuildResponse<T>().WithPayload(payload);
 
+        public BuildResponse AndWithErrors(Error error)
+        {
+            if (error != null)
+            {
+                errors.Add(error);
+            }
+
+            return this;
+        }
+
         public BuildResponse AndWithErrors(IEnumerable<Error> errors)
         {
             if (errors != null)
@@ -31,9 +41,23 @@ namespace BinaryMash.Responses
 
     public class BuildResponse<T> 
     {
+        public BuildResponse<T> AndWithErrors(Error error)
+        {
+            if (error != null)
+            {
+                errors.Add(error);
+            }
+
+            return this;
+        }
+
         public BuildResponse<T> AndWithErrors(IEnumerable<Error> errors)
         {
-            this.errors.AddRange(errors);
+            if (errors != null)
+            {
+                this.errors.AddRange(errors);
+            }
+
             return this;
         }
 
