@@ -1,5 +1,11 @@
 # Release Notes
 
+## Version 0.4.0 (2017-02-12)
+
+ - [#13](https://github.com/binarymash/responses/pull/13) - Point at nuget feed - Forgot to update the readme. contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+ - [#12](https://github.com/binarymash/responses/pull/12) - Point at nuget feed contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+ - [#11](https://github.com/binarymash/responses/issues/11) - Publish stable builds to official nuget feed
+
 ## Version 0.3.0 (2017-02-12)
 
  - [#10](https://github.com/binarymash/responses/pull/10) - Updated sln and cake scripts contributed by Philip Wood ([binarymash](https://github.com/binarymash))
@@ -9,5 +15,3 @@
  - [#5](https://github.com/binarymash/responses/issues/5) - Target minimum possible netstandard...
  - [#4](https://github.com/binarymash/responses/issues/4) - Publish to stable feed on github version release
  - [#2](https://github.com/binarymash/responses/pull/2) - testing feature branch versioning contributed by Philip Wood ([binarymash](https://github.com/binarymash))
-
-Commits: 91dd4ec080...a993bb7dcb
