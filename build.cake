@@ -28,8 +28,8 @@ var nugetFeedUnstableBranchFilter = "^(develop)$|^(PullRequest/)";
 // stable releases
 var tagsUrl = "https://api.github.com/repos/binarymash/responses/releases/tags/";
 var nugetFeedStableKey = EnvironmentVariable("nuget-apikey-stable");
-var nugetFeedStableUploadUrl = "https://www.myget.org/F/binarymash-stable/api/v2/package";
-var nugetFeedStableSymbolsUploadUrl = "https://www.myget.org/F/binarymash-stable/symbols/api/v2/package";
+var nugetFeedStableUploadUrl = "https://www.nuget.org/api/v2/package";
+var nugetFeedStableSymbolsUploadUrl = "https://www.nuget.org/api/v2/package";
 
 // internal build variables - don't change these.
 var releaseTag = "";
