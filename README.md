@@ -46,7 +46,7 @@ var response = BuildResponse
 
 ## Installing
 
-Stable builds are published to https://www.myget.org/F/binarymash-stable/api/v3/index.json. Ensure you have this as a Nuget package source, then install via Nuget in the usual way
+Stable builds are published to https://www.myget.org/F/binarymash-stable/api/v3/index.json. Ensure you have this as a Nuget package source, then install via Nuget in the usual way.
 
 ```
 Install-Package BinaryMash.Responses
@@ -62,7 +62,7 @@ using BinaryMash.Responses;
 ```
 
 ### Response types
-There are two types of Response object. Choose which type to use based on what you want your response to contain.
+There are two types of response object; the type of response to use will depend on what we want it to contain.
 
 `BinaryMash.Responses.Response<T>` is a response that contains a strongly typed payload. We will use this when we want to return a value from a method:
 
@@ -137,7 +137,7 @@ Serialized, this looks like...
 }
 ```
 
-Great. We can return an response with errors. But how do we return a payload value?
+Great. We can create a response with errors. But how do we include a payload value?
 
 ### Payload response
 
@@ -196,7 +196,7 @@ var response = BuildResponse
 
 ### Payload response with default value
 
-If we are setting errors on a payload response, we might decide it is not meaningful to also set a value in the payload. However, will lkely be constrained at compile time to return a `Response<T>` rather than a `Response`.
+If we are setting errors on a payload response, we might decide it is not meaningful to also set a value in the payload. However, will likely be constrained at compile time to return a `Response<T>` rather than a `Response`.
 
 In this case, rather than having to always explicitly specify a value for the payload, we can choose to implicitly return the default value of our payload type. We can do this by using the parameterless version of `.WithPayload<T>()`...
 
@@ -207,7 +207,7 @@ var response = BuildResponse
     .Create();
 ```
 
-This is exactly the same as explicitly set the default value:
+This is exactly the same as explicitly setting the default value:
 
 ```
     // ...
