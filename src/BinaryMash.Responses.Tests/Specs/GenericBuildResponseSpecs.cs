@@ -79,7 +79,7 @@
 
         private void GivenWeWantAResponseWithADefaultPayload()
         {
-            buildResponse = BuildResponse.WithDefaultPayloadOfType<SomeTestClass>();
+            buildResponse = BuildResponse.WithPayload<SomeTestClass>();
         }
 
         private void GivenWeWantAResponseWithANullPayload()
@@ -161,7 +161,6 @@
 
         public class SomeTestClass
         {
-
         }
     }
 }
