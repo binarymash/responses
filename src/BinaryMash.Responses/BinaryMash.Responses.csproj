@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <VersionPrefix>0.0.0-dev</VersionPrefix>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <AssemblyName>BinaryMash.Responses</AssemblyName>
+    <PackageId>BinaryMash.Responses</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/binarymash/responses</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/binarymash/responses/blob/develop/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/binarymash/responses</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Authors>BinaryMash.Responses</Authors>
+    <Description>This library provides a fluent API for building standardized response objects that, optionally, contain payloads and errors.</Description>
+  </PropertyGroup>
+
+</Project>
