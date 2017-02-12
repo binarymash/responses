@@ -46,12 +46,7 @@ var response = BuildResponse
 
 ## Installing
 
-Stable builds are published to https://www.myget.org/F/binarymash-stable/api/v3/index.json. Ensure you have this as a Nuget package source, then install via Nuget in the usual way.
-
-```
-Install-Package BinaryMash.Responses
-```
-
+Stable builds are published to [Nuget](https://www.nuget.org/packages/BinaryMash.Responses/). The package name is `BinaryMash.Responses`
 
 ## How to use
 
@@ -240,8 +235,6 @@ The repository is built on [AppVeyor](https://ci.appveyor.com/project/binarymash
 ### Stable
 
 [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/master?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/master)
-
-Stable builds are published to https://www.myget.org/F/binarymash-stable/api/v3/index.json
 
 ### Development
 
