@@ -5,7 +5,7 @@
 
     public class Response
     {
-        internal Response(IList<Error> errors)
+        public Response(IList<Error> errors)
         {
             Errors = new ReadOnlyCollection<Error>(errors);
         }
@@ -17,7 +17,7 @@
     {
         public T Payload { get; private set; }
 
-        internal Response(T payload, IList<Error> errors) : base(errors)
+        public Response(T payload, IList<Error> errors) : base(errors)
         {
             Payload = payload;
         }

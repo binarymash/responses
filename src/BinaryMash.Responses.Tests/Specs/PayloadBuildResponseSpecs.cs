@@ -5,7 +5,7 @@
     using TestStack.BDDfy;
     using Xunit;
 
-    public class GenericBuildResponseSpecs
+    public class PayloadBuildResponseSpecs
     {
         private BuildResponse<SomeTestClass> buildResponse;
 
@@ -15,7 +15,7 @@
 
         private Response<SomeTestClass> response;
 
-        public GenericBuildResponseSpecs()
+        public PayloadBuildResponseSpecs()
         {
             expectedErrors = new List<Error>();
         }
