@@ -1,5 +1,6 @@
 ﻿namespace BinaryMash.Responses.Tests.Specs
 {
+    using System;
     using Newtonsoft.Json;
     using Shouldly;
     using TestStack.BDDfy;
@@ -14,9 +15,19 @@
         Response deserializedResponse; 
 
         [Fact]
-        public void DeserializationWithJsonDotNet()
+        public void DeserializationOfResponseWithAllPropertiesSet()
         {
             this.Given(_ => GivenAResponseObjectWithErrors())
+                .When(_ => WhenWeSerializeIt())
+                .And(_ => WhenWeDeserializeItAgain())
+                .Then(_ => ThenTheDeserializedResponseMatchesTheOriginalResponse())
+                .BDDfy();
+        }
+
+        [Fact]
+        public void DeserializationOfResponseWithNoPropertiesSet()
+        {
+            this.Given(_ => GivenAResponseObjectWithNoErrors())
                 .When(_ => WhenWeSerializeIt())
                 .And(_ => WhenWeDeserializeItAgain())
                 .Then(_ => ThenTheDeserializedResponseMatchesTheOriginalResponse())
@@ -31,6 +42,13 @@
                     {
                         new Error("123", "456"),
                     })
+                .Create();
+        }
+
+        private void GivenAResponseObjectWithNoErrors()
+        {
+            originalResponse = BuildResponse
+                .WithNoPayload()
                 .Create();
         }
 

@@ -4,6 +4,7 @@
     using Shouldly;
     using TestStack.BDDfy;
     using Xunit;
+    using System.Collections.Generic;
 
     public class ResponseSpecscs
     {
@@ -14,16 +15,26 @@
         Response<MyTestClass> deserializedResponse; 
 
         [Fact]
-        public void DeserializationWithJsonDotNet()
+        public void DeserializationOfResponseWithAllPropertiesSet()
         {
-            this.Given(_ => GivenAResponseObjectWithErrors())
+            this.Given(_ => GivenAResponseWithAllPropertiesSet())
                 .When(_ => WhenWeSerializeIt())
                 .And(_ => WhenWeDeserializeItAgain())
                 .Then(_ => ThenTheDeserializedResponseMatchesTheOriginalResponse())
                 .BDDfy();
         }
 
-        private void GivenAResponseObjectWithErrors()
+        [Fact]
+        public void DeserializationOfResponseWithNullPayloadAndNoErrors()
+        {
+            this.Given(_ => GivenAResponseObjectWithNullPayloadAndNoErrors())
+                .When(_ => WhenWeSerializeIt())
+                .And(_ => WhenWeDeserializeItAgain())
+                .Then(_ => ThenTheDeserializedResponseMatchesTheOriginalResponse())
+                .BDDfy();
+        }
+
+        private void GivenAResponseWithAllPropertiesSet()
         {
             originalResponse = BuildResponse
                 .WithPayload(new MyTestClass { SomeValue = "ThisIsAValue"})
@@ -32,6 +43,13 @@
                         new Error("123", "456"),
                         new Error("789", "012")
                     })
+                .Create();
+        }
+
+        private void GivenAResponseObjectWithNullPayloadAndNoErrors()
+        {
+            originalResponse = BuildResponse
+                .WithPayload((MyTestClass)null)
                 .Create();
         }
 
@@ -54,7 +72,7 @@
                 deserializedResponse.Errors.ShouldContain(e => e.Code == error.Code && e.Message == error.Message);
             }
 
-            deserializedResponse.Payload.SomeValue.ShouldBe(originalResponse.Payload.SomeValue);
+            deserializedResponse.Payload?.SomeValue.ShouldBe(originalResponse.Payload?.SomeValue);
         }
 
         class MyTestClass
