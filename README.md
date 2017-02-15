@@ -8,8 +8,9 @@ Built in .NET Core and targetting [.NET Standard 1.1](https://github.com/dotnet/
 
 ### Example
 
-Lets assume our existing code defines an `Address` object...
-```
+Lets assume our existing code defines an `Address` object:
+
+```csharp
 class Address
 {
 	public Name { get; set; }
@@ -21,16 +22,18 @@ class Address
 var address = new Address(...) // initialise values
 ```
 
-...we can use `BuildResponse` to build a `Response` that contains an `Address` instance, and set an `Error` on the response...
+We can use `BuildResponse` to build a `Response` that contains an `Address` instance, and set an `Error` on the response...
 
-```
+```csharp
 var response = BuildResponse
     .WithPayload(address)
     .AndWithErrors(new Error("InvalidName", "The name must be set"))
     .Create();
 ```
+
 ...and then the response serialized to JSON is...
-```
+
+```json
 {
 	"Payload":
     {
@@ -52,7 +55,7 @@ Stable builds are published to [Nuget](https://www.nuget.org/packages/BinaryMash
 
 You'll find everything you need in the `Binarymash.Responses` namespace.
 
-```
+```csharp
 using BinaryMash.Responses;
 ```
 
@@ -61,7 +64,7 @@ There are two types of response object; the type of response to use will depend 
 
 `BinaryMash.Responses.Response<T>` is a response that contains a strongly typed payload. We will use this when we want to return a value from a method:
 
-```
+```csharp
 // synchronous example
 Response<Address> GetAddress(uint id); // replaces Address GetAddress(uint id)
 
@@ -71,7 +74,7 @@ async Task<Response<Address>> GetAddress(uint id); // replaces async Task<Addres
 
 `BinaryMash.Responses.Response` is a response that contains no payload. We will use this when we don't care about a return value:
 
-```
+```csharp
 // synchronous example
 Response SetAddress(); // replaces void SetAddress(Address address)
 
@@ -86,7 +89,7 @@ Now, lets look at how to create these responses.
 
 The simplest example creates an empty response:
 
-```
+```csharp
 var response = BuildResponse
     .WithNoPayload()
     .Create();
@@ -94,7 +97,7 @@ var response = BuildResponse
 
 ...serialzed into JSON, this response will look like...
 
-```
+```json
 {
 	"Errors":[]
 }
@@ -106,7 +109,7 @@ Notice that the empty response contains an empty collection of errors. Lets lear
 
 The following code lets us add errors to the empty response.
 
-```
+```csharp
 var response = BuildResponse
     .WithNoPayload()
     // errors can be added individually...
@@ -122,7 +125,7 @@ var response = BuildResponse
 
 Serialized, this looks like...
 
-```
+```json
 {
 	"Errors":[
     	{ "Code":"InvalidName", "Message":"The name must be set" },
@@ -137,7 +140,8 @@ Great. We can create a response with errors. But how do we include a payload val
 ### Payload response
 
 Lets assume we have an address object...
-```
+
+```csharp
 class Address
 {
 	public Name { get; set; }
@@ -149,7 +153,7 @@ class Address
 
 This code builds a response that contains an instance of `Address`.
 
-```
+```csharp
 Address address;
 
 // some code here to set value of address (not shown)
@@ -158,15 +162,18 @@ var response = BuildResponse
     .WithPayload<Address>(address)
     .Create();
 ```
+
 In most cases the compiler will infer the type of the payload from the value you supply, so we can omit the type definition from the code.
 
-```
+```csharp
 	// ...
     .WithPayload(address)
 	// ...
 ```
+
 The serialized response is...
-```
+
+```json
 {
 	"Payload":
     {
@@ -182,7 +189,7 @@ The serialized response is...
 
 Of course, we can add errors to the payload response in just the same way we did on the empty response:
 
-```
+```csharp
 var response = BuildResponse
     .WithPayload(address)
     .AndWithErrors(new Error("InvalidName", "The name must be set"))
@@ -195,7 +202,7 @@ If we are setting errors on a payload response, we might decide it is not meanin
 
 In this case, rather than having to always explicitly specify a value for the payload, we can choose to implicitly return the default value of our payload type. We can do this by using the parameterless version of `.WithPayload<T>()`...
 
-```
+```csharp
 var response = BuildResponse
     .WithPayload<Address>()
     .AndWithErrors(new Error("InvalidName", "The name must be set"))
@@ -204,7 +211,7 @@ var response = BuildResponse
 
 This is exactly the same as explicitly setting the default value:
 
-```
+```csharp
     // ...
     .WithPayload<Address>(default(Address))
     // ...
@@ -217,8 +224,10 @@ In most cases it will be the same as setting the payload to null:
     .WithPayload((Address)null)
     // ...
 ```
-The serialized output will look something like this
-```
+
+The serialized output will look something like this:
+
+```json
 {
 	"Payload":null,
     "Errors":[
