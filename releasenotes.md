@@ -1,5 +1,14 @@
 # Release Notes
 
+## Version 0.6.0 (2017-02-15)
+
+ - [#15](https://github.com/binarymash/responses/pull/15) - Feature/readme styling contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+ - [#14](https://github.com/binarymash/responses/pull/14) - Feature/serialization tests contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+ 
+## Version 0.5.0 (2017-02-13)
+
+ - No changes from 0.4.0 - testing release process.
+
 ## Version 0.4.0 (2017-02-12)
 
  - [#13](https://github.com/binarymash/responses/pull/13) - Point at nuget feed - Forgot to update the readme. contributed by Philip Wood ([binarymash](https://github.com/binarymash))
