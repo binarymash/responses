@@ -41,7 +41,6 @@
                 .BDDfy();
         }
 
-
         [Fact]
         public void NullPayload()
         {
@@ -153,7 +152,7 @@
         {
             response.Errors.Count.ShouldBe(expectedErrors.Count);
 
-            foreach(var expectedError in expectedErrors)
+            foreach (var expectedError in expectedErrors)
             {
                 response.Errors.ShouldContain(e => e.Code == expectedError.Code && e.Message == expectedError.Message);
             }

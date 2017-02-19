@@ -4,15 +4,14 @@
     using Shouldly;
     using TestStack.BDDfy;
     using Xunit;
-    using System.Collections.Generic;
 
-    public class ResponseSpecscs
+    public class PayloadResponseSpecs
     {
-        Response<MyTestClass> originalResponse;
+        private Response<MyTestClass> originalResponse;
 
-        string serializedResponse;
+        private string serializedResponse;
 
-        Response<MyTestClass> deserializedResponse; 
+        private Response<MyTestClass> deserializedResponse;
 
         [Fact]
         public void DeserializationOfResponseWithAllPropertiesSet()
@@ -37,7 +36,7 @@
         private void GivenAResponseWithAllPropertiesSet()
         {
             originalResponse = BuildResponse
-                .WithPayload(new MyTestClass { SomeValue = "ThisIsAValue"})
+                .WithPayload(new MyTestClass { SomeValue = "ThisIsAValue" })
                 .AndWithErrors(new[]
                     {
                         new Error("123", "456"),
@@ -67,7 +66,7 @@
         {
             deserializedResponse.Errors.Count.ShouldBe(originalResponse.Errors.Count);
 
-            foreach(var error in originalResponse.Errors)
+            foreach (var error in originalResponse.Errors)
             {
                 deserializedResponse.Errors.ShouldContain(e => e.Code == error.Code && e.Message == error.Message);
             }
@@ -75,7 +74,7 @@
             deserializedResponse.Payload?.SomeValue.ShouldBe(originalResponse.Payload?.SomeValue);
         }
 
-        class MyTestClass
+        private class MyTestClass
         {
             public string SomeValue { get; set; }
         }
