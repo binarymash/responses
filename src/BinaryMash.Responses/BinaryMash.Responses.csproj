@@ -16,6 +16,11 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Authors>BinaryMash.Responses</Authors>
     <Description>This library provides a fluent API for building standardized response objects that, optionally, contain payloads and errors.</Description>
+    <CodeAnalysisRuleSet>..\..\codeanalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" />
+  </ItemGroup>
 
 </Project>

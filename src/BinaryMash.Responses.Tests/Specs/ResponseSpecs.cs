@@ -1,6 +1,5 @@
 ﻿namespace BinaryMash.Responses.Tests.Specs
 {
-    using System;
     using Newtonsoft.Json;
     using Shouldly;
     using TestStack.BDDfy;
@@ -8,11 +7,11 @@
 
     public class ResponseSpecs
     {
-        Response originalResponse;
+        private Response originalResponse;
 
-        string serializedResponse;
+        private string serializedResponse;
 
-        Response deserializedResponse; 
+        private Response deserializedResponse;
 
         [Fact]
         public void DeserializationOfResponseWithAllPropertiesSet()
@@ -66,7 +65,7 @@
         {
             deserializedResponse.Errors.Count.ShouldBe(originalResponse.Errors.Count);
 
-            foreach(var error in originalResponse.Errors)
+            foreach (var error in originalResponse.Errors)
             {
                 deserializedResponse.Errors.ShouldContain(e => e.Code == error.Code && e.Message == error.Message);
             }

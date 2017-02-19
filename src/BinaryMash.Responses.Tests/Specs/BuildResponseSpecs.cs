@@ -1,9 +1,9 @@
 ﻿namespace BinaryMash.Responses.Tests.Specs
 {
+    using System.Collections.Generic;
     using Shouldly;
     using TestStack.BDDfy;
     using Xunit;
-    using System.Collections.Generic;
 
     public class BuildResponseSpecs
     {
@@ -17,6 +17,7 @@
         {
             expectedErrors = new List<Error>();
         }
+
         [Fact]
         public void NoErrors()
         {
