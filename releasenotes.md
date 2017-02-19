@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 0.6.2 (2017-02-19)
+
+ - [#19](https://github.com/binarymash/responses/pull/19) - Fix package publishing contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+
 ## Version 0.6.1 (2017-02-19)
 
  - [#18](https://github.com/binarymash/responses/pull/18) - Fix cake scripts so that everything builds on mac contributed by Philip Wood ([binarymash](https://github.com/binarymash))
