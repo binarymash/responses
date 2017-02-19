@@ -65,7 +65,7 @@
         /// <summary>
         /// Instantiates the response
         /// </summary>
-        /// <returns>The built Response</returns>
+        /// <returns>The Response instance</returns>
         public Response Create() => new Response(errors);
     }
 
@@ -116,7 +116,7 @@
         /// <summary>
         /// Instantiates the response
         /// </summary>
-        /// <returns>The payload-aware BuildResponse pipeline</returns>
+        /// <returns>The Response instance</returns>
         public Response<T> Create() => new Response<T>(payload, errors);
 
         internal BuildResponse<T> WithPayload(T payload)
