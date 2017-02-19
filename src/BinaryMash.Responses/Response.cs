@@ -13,13 +13,16 @@
         public IReadOnlyCollection<Error> Errors { get; private set; }
     }
 
+#pragma warning disable SA1402 // File may only contain a single class
     public class Response<T> : Response
+#pragma warning restore SA1402 // File may only contain a single class
     {
-        public T Payload { get; private set; }
-
-        public Response(T payload, IList<Error> errors) : base(errors)
+        public Response(T payload, IList<Error> errors)
+            : base(errors)
         {
             Payload = payload;
         }
+
+        public T Payload { get; private set; }
     }
 }

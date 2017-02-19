@@ -1,5 +1,7 @@
 # Responses
 
+[![license](https://img.shields.io/github/license/binarymash/responses.svg)](https://github.com/binarymash/responses/blob/develop/LICENSE) [![NuGet version](https://badge.fury.io/nu/binarymash.responses.svg)](https://badge.fury.io/nu/binarymash.responses) [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/develop?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/develop)
+
 ## Introduction
 
 This library provides a fluent API for building standardized response objects that, optionally, contain payloads and errors.
@@ -48,6 +50,8 @@ var response = BuildResponse
 ```
 
 ## Installing
+
+[![NuGet version](https://badge.fury.io/nu/binarymash.responses.svg)](https://badge.fury.io/nu/binarymash.responses)
 
 Stable builds are published to [Nuget](https://www.nuget.org/packages/BinaryMash.Responses/). The package name is `BinaryMash.Responses`
 
