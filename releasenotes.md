@@ -1,5 +1,10 @@
 # Release Notes
 
+## Version 0.6.3 (2017-02-25)
+
+ - [#23](https://github.com/binarymash/responses/pull/23) - Fix build warnings contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+ - [#21](https://github.com/binarymash/responses/pull/21) - Remove runtime dependency on Stylecop.Analyzers contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+
 ## Version 0.6.2 (2017-02-19)
 
  - [#19](https://github.com/binarymash/responses/pull/19) - Fix package publishing contributed by Philip Wood ([binarymash](https://github.com/binarymash))
