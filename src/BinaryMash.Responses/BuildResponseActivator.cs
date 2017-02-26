@@ -73,10 +73,5 @@
         {
             return responseType.GenericTypeArguments.Any();
         }
-
-        private Type PayloadType(Type responseType)
-        {
-            return responseType.GenericTypeArguments[0];
-        }
     }
 }

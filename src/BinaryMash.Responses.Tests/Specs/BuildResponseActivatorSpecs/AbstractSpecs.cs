@@ -12,7 +12,7 @@
         public AbstractSpecs()
         {
             ExpectedErrors = new List<Error>();
-            Activator = BuildResponse.ActivatedFrom<TResponse>();
+            Activator = BuildResponse.WithType<TResponse>();
         }
 
         protected BuildResponseActivator<TResponse> Activator { get; set; }
