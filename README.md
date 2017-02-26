@@ -240,6 +240,28 @@ The serialized output will look something like this:
 }
 ```
 
+### Runtime Activation
+In some cases it might not be possible to know at compile time the exact type of response you want to create without using reflection. In the example below, we don't know at compile time if `TResponse` is a payload-less `Response` or if it is a `Response<TPayload>`. Even if it does have a payload, we can't be sure of its type.
+
+In this situation, we cannot easily use `.WithNoPayload()` or `.WithPayload<TPayload>()`. However, the library provides another method to create a response: `.WithType<TResponse>()`. 
+
+
+```csharp
+public TResponse Handle(TRequest request)
+{
+    // The code that calls this method specifies exactly what type TResponse is.
+
+    var response = BuildResponse
+        .WithType<TResponse>()
+        .AndWithPayload(new Address()) // dangerous! Do we know for sure that the TResponse has a payload of this type?
+        .AndWithErrors(new Error("InvalidName", "The name must be set"))
+        .Create();
+
+    return response;
+}
+```
+
+Note that this mechanism is not as strongly typed as the other methods; you will get exceptions at runtime if you try to use mismatching types. So, you should only use this option if you really have no alternative.
 
 ## Build Status
 
