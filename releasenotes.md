@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 0.7.0 (2017-02-26)
+
+ - [#25](https://github.com/binarymash/responses/pull/25) - Feature/activation contributed by Philip Wood ([binarymash](https://github.com/binarymash))
+
 ## Version 0.6.3 (2017-02-25)
 
  - [#23](https://github.com/binarymash/responses/pull/23) - Fix build warnings contributed by Philip Wood ([binarymash](https://github.com/binarymash))

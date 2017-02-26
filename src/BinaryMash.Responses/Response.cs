@@ -14,15 +14,15 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single class
-    public class Response<T> : Response
+    public class Response<TPayload> : Response
 #pragma warning restore SA1402 // File may only contain a single class
     {
-        public Response(T payload, IList<Error> errors)
+        public Response(TPayload payload, IList<Error> errors)
             : base(errors)
         {
             Payload = payload;
         }
 
-        public T Payload { get; private set; }
+        public TPayload Payload { get; private set; }
     }
 }
