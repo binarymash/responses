@@ -24,6 +24,12 @@
         /// <returns>The payload-aware BuildResponse pipeline</returns>
         public static BuildResponse<T> WithPayload<T>() => new BuildResponse<T>();
 
+        public static BuildResponseActivator<T> ActivatedFrom<T>()
+            where T : class
+        {
+            return new BuildResponseActivator<T>();
+        }
+
         /// <summary>
         /// Creates a response that contains a payload of the specified type
         /// </summary>
