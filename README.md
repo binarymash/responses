@@ -1,6 +1,6 @@
 # Responses
 
-[![license](https://img.shields.io/github/license/binarymash/responses.svg)](https://github.com/binarymash/responses/blob/develop/LICENSE) [![NuGet version](https://badge.fury.io/nu/binarymash.responses.svg)](https://badge.fury.io/nu/binarymash.responses) [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/develop?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/develop)
+[![license](https://img.shields.io/github/license/binarymash/responses.svg)](https://github.com/binarymash/responses/blob/develop/LICENSE) [![NuGet version](https://badge.fury.io/nu/binarymash.responses.svg)](https://badge.fury.io/nu/binarymash.responses) [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/develop?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/develop) [![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=master)](https://coveralls.io/github/binarymash/responses?branch=master)
 
 ## Introduction
 
@@ -271,9 +271,13 @@ The repository is built on [AppVeyor](https://ci.appveyor.com/project/binarymash
 
 [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/master?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/master)
 
+[![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=master)](https://coveralls.io/github/binarymash/responses?branch=master)
+
 ### Development
 
 
 [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/develop?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/develop)
+
+[![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=develop)](https://coveralls.io/github/binarymash/responses?branch=develop)
 
 Development builds are published to https://www.myget.org/F/binarymash-unstable/api/v3/index.json
