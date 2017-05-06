@@ -1,8 +1,13 @@
 ﻿#tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=GitReleaseNotes"
+
 #tool "nuget:?package=OpenCover"
 #tool "nuget:?package=ReportGenerator"
+
 #addin "nuget:?package=Cake.Json"
+
+#tool coveralls.net
+#addin Cake.Coveralls
 
 
 // compile
@@ -17,6 +22,7 @@ var artifactsForUnitTestsDir = artifactsDir + Directory("UnitTests");
 var unitTestAssemblies = @"./src/BinaryMash.Responses.Tests/BinaryMash.Responses.Tests.csproj";
 var openCoverSettings = new OpenCoverSettings();
 var minCodeCoverage = 95d;
+var coverallsRepoToken = "coveralls-repo-token-responses";
 
 // packaging
 var packagesDir = artifactsDir + Directory("Packages");
@@ -109,12 +115,8 @@ Task("Compile")
 
 Task("RunUnitTestsCoverageReport")
 	.IsDependentOn("Compile")
-	.Does(() =>
+	.Does(context =>
 	{
-        // For now we run the unit tests directly with dotnet test, then run them again via
-        // opencover. This is because opencover doesn't make it easy to fail the build when 
-        // tests fail
-
         var coverageSummaryFile = artifactsForUnitTestsDir + File("coverage.xml");
         
         EnsureDirectoryExists(artifactsForUnitTestsDir);
@@ -136,6 +138,24 @@ Task("RunUnitTestsCoverageReport")
         
         ReportGenerator(coverageSummaryFile, artifactsForUnitTestsDir);
 		
+		if (AppVeyor.IsRunningOnAppVeyor)
+		{
+			var repoToken = EnvironmentVariable(coverallsRepoToken);
+			if (string.IsNullOrEmpty(repoToken))
+			{
+				throw new Exception(string.Format("Coveralls repo token not found. Set environment variable '{0}'", coverallsRepoToken));
+			}
+
+			CoverallsNet(coverageSummaryFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+			{
+				RepoToken = repoToken
+			});
+		}
+		else
+		{
+			Information("We are not running on the build server so we won't publish the coverage report to coveralls.io");
+		}
+
 		var sequenceCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@sequenceCoverage");
 		var branchCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@branchCoverage");
 
