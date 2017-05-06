@@ -146,6 +146,7 @@ Task("RunUnitTestsCoverageReport")
 				throw new Exception(string.Format("Coveralls repo token not found. Set environment variable '{0}'", coverallsRepoToken));
 			}
 
+			Information("Uploading test coverage to coveralls.io");
 			CoverallsNet(coverageSummaryFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
 			{
 				RepoToken = repoToken
