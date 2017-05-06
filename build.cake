@@ -1,5 +1,7 @@
 ﻿#tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=GitReleaseNotes"
+#tool "nuget:?package=OpenCover"
+#tool "nuget:?package=ReportGenerator"
 #addin "nuget:?package=Cake.Json"
 
 
@@ -13,6 +15,8 @@ var artifactsDir = Directory("artifacts");
 // unit testing
 var artifactsForUnitTestsDir = artifactsDir + Directory("UnitTests");
 var unitTestAssemblies = @"./src/BinaryMash.Responses.Tests/BinaryMash.Responses.Tests.csproj";
+var openCoverSettings = new OpenCoverSettings();
+var minCodeCoverage = 95d;
 
 // packaging
 var packagesDir = artifactsDir + Directory("Packages");
@@ -103,21 +107,48 @@ Task("Compile")
 		DotNetCoreBuild(slnFile, settings);
 	});
 
-Task("RunUnitTests")
+Task("RunUnitTestsCoverageReport")
 	.IsDependentOn("Compile")
 	.Does(() =>
 	{
-		var settings = new DotNetCoreTestSettings
-		{
-			Configuration = compileConfig,
-		};
+        // For now we run the unit tests directly with dotnet test, then run them again via
+        // opencover. This is because opencover doesn't make it easy to fail the build when 
+        // tests fail
 
-		EnsureDirectoryExists(artifactsForUnitTestsDir);
-		DotNetCoreTest(unitTestAssemblies, settings);
+        var coverageSummaryFile = artifactsForUnitTestsDir + File("coverage.xml");
+        
+        EnsureDirectoryExists(artifactsForUnitTestsDir);
+        
+        OpenCover(tool => 
+            {
+                tool.DotNetCoreTest(unitTestAssemblies);
+            },
+            new FilePath(coverageSummaryFile),
+            new OpenCoverSettings()
+            {
+                Register="user",
+                ArgumentCustomization=args=>args.Append(@"-oldstyle -returntargetcode")
+            }
+            .WithFilter("+[BinaryMash.*]*")
+            .WithFilter("-[xunit*]*")
+            .WithFilter("-[BinaryMash.*.Tests]*")
+        );
+        
+        ReportGenerator(coverageSummaryFile, artifactsForUnitTestsDir);
+		
+		var sequenceCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@sequenceCoverage");
+		var branchCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@branchCoverage");
+
+		Information("Sequence Coverage: " + sequenceCoverage);
+		
+		if(double.Parse(sequenceCoverage) < minCodeCoverage)
+		{
+			throw new Exception(string.Format("Code coverage fell below the threshold of {0}%", minCodeCoverage));
+		};
 	});
 
 Task("RunTests")
-	.IsDependentOn("RunUnitTests");
+	.IsDependentOn("RunUnitTestsCoverageReport");
 
 Task("CreatePackages")
 	.IsDependentOn("Compile")
