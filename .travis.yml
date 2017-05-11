@@ -1,6 +1,8 @@
 language: csharp
 os:
   - linux
+before_install:
+  - git fetch --unshallow # Travis always does a shallow clone, but GitVersion needs the full history including branches and tags  
 mono:
   - latest
 dotnet: 1.0.4
