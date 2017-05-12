@@ -1,8 +1,10 @@
 language: csharp
 os:
   - linux
-install:
-  - git fetch --unshallow # Travis always does a shallow clone, but GitVersion needs the full history including branches and tags  
+before-install:
+  - git clone https://github.com/$TRAVIS_REPO_SLUG.git $TRAVIS_REPO_SLUG
+  - cd $TRAVIS_REPO_SLUG
+  - git checkout -qf $TRAVIS_COMMIT 
 mono:
   - latest
 dotnet: 1.0.4
