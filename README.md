@@ -265,19 +265,21 @@ Note that this mechanism is not as strongly typed as the other methods; you will
 
 ## Build Status
 
-The repository is built on [AppVeyor](https://ci.appveyor.com/project/binarymash/responses).
-
 ### Stable
 
-[![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/master?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/master)
 
-[![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=master)](https://coveralls.io/github/binarymash/responses?branch=master)
+| Environment  | Environment Config | Build Server | Status | Coverage
+|--------------|--------------------|--------------|--------|---------
+| Windows      | Visual Studio 2017 | Appveyor     | [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/master?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/master) | [![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=master)](https://coveralls.io/github/binarymash/responses?branch=master)
+| Ubuntu 14.04 | SDK 1.0.4         | Travis       | [![Build Status](https://travis-ci.org/binarymash/responses.svg?branch=master)](https://travis-ci.org/binarymash/responses) | -
+
 
 ### Development
 
 
-[![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/develop?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/develop)
-
-[![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=develop)](https://coveralls.io/github/binarymash/responses?branch=develop)
+| Environment  | Environment Config | Build Server | Status | Coverage
+|--------------|--------------------|--------------|--------|---------
+| Windows      | Visual Studio 2017 | Appveyor     | [![Build status](https://ci.appveyor.com/api/projects/status/p51dvusrw32u9b17/branch/develop?svg=true)](https://ci.appveyor.com/project/binarymash/responses/branch/develop) | [![Coverage Status](https://coveralls.io/repos/github/binarymash/responses/badge.svg?branch=develop)](https://coveralls.io/github/binarymash/responses?branch=develop)
+| Ubuntu 14.04 | SDK 1.0.4          | Travis       | [![Build Status](https://travis-ci.org/binarymash/responses.svg?branch=develop)](https://travis-ci.org/binarymash/responses) | -
 
 Development builds are published to https://www.myget.org/F/binarymash-unstable/api/v3/index.json
