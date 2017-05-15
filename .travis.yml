@@ -1,8 +1,10 @@
 language: csharp
 os:
   - linux
-before-install:
-  - git fetch origin +refs/heads/*:refs/remotes/origin/* --unshallow
+before_install:
+  - git clone https://github.com/$TRAVIS_REPO_SLUG.git $TRAVIS_REPO_SLUG
+  - cd $TRAVIS_REPO_SLUG
+  - git checkout -qf $TRAVIS_COMMIT 
 mono:
   - latest
 dotnet: 1.0.4
