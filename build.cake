@@ -81,15 +81,15 @@ Task("Version")
 		var nugetVersion = versioning.NuGetVersion;
 		Information("SemVer version number: " + nugetVersion);
 
-		if (AppVeyor.IsRunningOnAppVeyor)
+		if (BuildSystem.IsLocalBuild)
+		{
+			Information("We are not running on build server, so we won't persist the version number.");
+		}
+		else
 		{
 			Information("Persisting version number...");
 			PersistVersion(committedVersion, nugetVersion);
 			buildVersion = nugetVersion;
-		}
-		else
-		{
-			Information("We are not running on build server, so we won't persist the version number.");
 		}
 	});
 
@@ -117,55 +117,70 @@ Task("RunUnitTestsCoverageReport")
 	.IsDependentOn("Compile")
 	.Does(context =>
 	{
-        var coverageSummaryFile = artifactsForUnitTestsDir + File("coverage.xml");
-        
-        EnsureDirectoryExists(artifactsForUnitTestsDir);
-        
-        OpenCover(tool => 
-            {
-                tool.DotNetCoreTest(unitTestAssemblies);
-            },
-            new FilePath(coverageSummaryFile),
-            new OpenCoverSettings()
-            {
-                Register="user",
-                ArgumentCustomization=args=>args.Append(@"-oldstyle -returntargetcode")
-            }
-            .WithFilter("+[BinaryMash.*]*")
-            .WithFilter("-[xunit*]*")
-            .WithFilter("-[BinaryMash.*.Tests]*")
-        );
-        
-        ReportGenerator(coverageSummaryFile, artifactsForUnitTestsDir);
-		
-		if (AppVeyor.IsRunningOnAppVeyor)
+		if (IsRunningOnWindows())
 		{
-			var repoToken = EnvironmentVariable(coverallsRepoToken);
-			if (string.IsNullOrEmpty(repoToken))
+			var coverageSummaryFile = artifactsForUnitTestsDir + File("coverage.xml");
+			
+			EnsureDirectoryExists(artifactsForUnitTestsDir);
+			
+			OpenCover(tool => 
+				{
+					tool.DotNetCoreTest(unitTestAssemblies);
+				},
+				new FilePath(coverageSummaryFile),
+				new OpenCoverSettings()
+				{
+					Register="user",
+					ArgumentCustomization=args=>args.Append(@"-oldstyle -returntargetcode")
+				}
+				.WithFilter("+[BinaryMash.*]*")
+				.WithFilter("-[xunit*]*")
+				.WithFilter("-[BinaryMash.*.Tests]*")
+			);
+			
+			ReportGenerator(coverageSummaryFile, artifactsForUnitTestsDir);
+			
+			if (BuildSystem.IsRunningOnAppVeyor)
 			{
-				throw new Exception(string.Format("Coveralls repo token not found. Set environment variable '{0}'", coverallsRepoToken));
+				var repoToken = EnvironmentVariable(coverallsRepoToken);
+				if (string.IsNullOrEmpty(repoToken))
+				{
+					throw new Exception(string.Format("Coveralls repo token not found. Set environment variable '{0}'", coverallsRepoToken));
+				}
+
+				Information("Uploading test coverage to coveralls.io");
+				CoverallsNet(coverageSummaryFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+				{
+					RepoToken = repoToken
+				});
+			}
+			else
+			{
+				Information("We are not running on the authoritative build server so we won't publish the coverage report to coveralls.io");
 			}
 
-			Information("Uploading test coverage to coveralls.io");
-			CoverallsNet(coverageSummaryFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+			var sequenceCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@sequenceCoverage");
+			var branchCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@branchCoverage");
+
+			Information("Sequence Coverage: " + sequenceCoverage);
+			
+			if(double.Parse(sequenceCoverage) < minCodeCoverage)
 			{
-				RepoToken = repoToken
-			});
+				throw new Exception(string.Format("Code coverage fell below the threshold of {0}%", minCodeCoverage));
+			};
 		}
 		else
 		{
-			Information("We are not running on the build server so we won't publish the coverage report to coveralls.io");
+			var settings = new DotNetCoreTestSettings
+			{
+				Configuration = compileConfig,
+			};
+
+			EnsureDirectoryExists(artifactsForUnitTestsDir);
+			DotNetCoreTest(unitTestAssemblies, settings);	
+
+			Warning("We are not running on Windows, so cannot test code coverage. If coverage is insufficient then the build will fail at this point when building on Windows.");		
 		}
-
-		var sequenceCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@sequenceCoverage");
-		var branchCoverage = XmlPeek(coverageSummaryFile, "//CoverageSession/Summary/@branchCoverage");
-
-		Information("Sequence Coverage: " + sequenceCoverage);
-		
-		if(double.Parse(sequenceCoverage) < minCodeCoverage)
-		{
-			throw new Exception(string.Format("Code coverage fell below the threshold of {0}%", minCodeCoverage));
-		};
 	});
 
 Task("RunTests")
@@ -186,7 +201,7 @@ Task("CreatePackages")
             "releaseNotes:releasenotes.md"
         });
 
-		if (AppVeyor.IsRunningOnAppVeyor)
+		if (BuildSystem.IsRunningOnAppVeyor)
 		{
 			var path = packagesDir.ToString() + @"/**/*";
 
@@ -210,7 +225,7 @@ Task("ReleasePackagesToUnstableFeed")
 Task("EnsureStableReleaseRequirements")
     .Does(() =>
     {
-        if (!AppVeyor.IsRunningOnAppVeyor)
+        if (!BuildSystem.IsRunningOnAppVeyor)
 		{
            throw new Exception("Stable release should happen via appveyor");
 		}

@@ -1,0 +1,14 @@
+language: csharp
+os:
+  - linux
+git:
+  depth: 999999
+before_install:
+  - git status
+  - git branch
+mono:
+  - latest
+dotnet: 1.0.4
+dist: trusty
+script:
+  - ./build.sh
