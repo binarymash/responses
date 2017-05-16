@@ -2,7 +2,7 @@ language: csharp
 os:
   - linux
 before_install:
-  - git fetch origin +refs/heads/*:refs/remotes/origin/* --unshallow
+  - git fetch --unshallow
 mono:
   - latest
 dotnet: 1.0.4
