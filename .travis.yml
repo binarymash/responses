@@ -2,7 +2,7 @@ language: csharp
 os:
   - linux
 git:
-  depth:999999
+  depth: 999999
 before_install:
   - git status
   - git branch
